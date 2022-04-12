@@ -1,0 +1,14 @@
+{
+  "name": "refactoring2",
+  "version": "1.0.0",
+  "description": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start1": "node 1_start/1.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
