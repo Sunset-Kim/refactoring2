@@ -1,15 +1,24 @@
-const invoices = require('./invoices.json');
-const plays = require('./plays.json');
+const colors = require("colors");
+const invoices = require("./invoices.json");
+const plays = require("./plays.json");
 
-console.log(statement(invoices[0], plays));
+// 테스트 코드
+console.log(
+  colors.bgRed(
+    JSON.stringify(statement(invoices[0], plays)) ===
+      JSON.stringify(
+        "청구 내역 (고객명: BigCo) \nHamlet: $650.00 (55석) \nAs You Like It: $580.00 (35석) \nOthello: $500.00 (40석) \n총액: $1,730.00 \n적립 포인트: 47점 \n"
+      )
+  )
+);
 
 function statement(invoice, plays) {
   let totalAmount = 0;
   let volumCredits = 0;
   let result = `청구 내역 (고객명: ${invoice.customer}) \n`;
-  const format = new Intl.NumberFormat('es-US', {
-    style: 'currency',
-    currency: 'USD',
+  const format = new Intl.NumberFormat("es-US", {
+    style: "currency",
+    currency: "USD",
     minimumFractionDigits: 2,
   }).format;
 
@@ -18,14 +27,14 @@ function statement(invoice, plays) {
     let thisAmount = 0;
 
     switch (play.type) {
-      case 'tragedy': // 비극
+      case "tragedy": // 비극
         thisAmount = 40000;
         if (perf.audience > 30) {
           thisAmount += 1000 * (perf.audience - 30);
         }
         break;
 
-      case 'comedy': // 희극
+      case "comedy": // 희극
         thisAmount = 30000;
         if (perf.audience > 20) {
           thisAmount += 10000 + 500 * (perf.audience - 20);
@@ -41,7 +50,7 @@ function statement(invoice, plays) {
     volumCredits += Math.max(perf.audience - 30, 0);
 
     // 희극 관객 5명 마다 추가 포인트를 제공한다.
-    if ('comedy' === play.type) volumCredits += Math.floor(perf.audience / 5);
+    if ("comedy" === play.type) volumCredits += Math.floor(perf.audience / 5);
 
     // 청구내역을 출력한다.
     result += `${play.name}: ${format(thisAmount / 100)} (${
@@ -55,3 +64,4 @@ function statement(invoice, plays) {
 
   return result;
 }
+``;
