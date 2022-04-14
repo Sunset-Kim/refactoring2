@@ -1,15 +1,17 @@
+type PlayName = "hamlet" | "as-like" | "othello";
+
 export type Invoice = {
   customer: string;
   performances: Performances[];
 };
 
 export type Performances = {
-  playId: string;
+  playId: PlayName;
   audience: number;
 };
 
 export type PlayList = {
-  [key: string]: Play;
+  [key in PlayName]: Play;
 };
 
 export type Play = {
