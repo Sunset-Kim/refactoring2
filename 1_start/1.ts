@@ -22,20 +22,13 @@ function statement(invoice: Invoice, plays: PlayList) {
   }).format;
 
   for (let perf of invoice.performances) {
-    let thisAmount = amountFor(perf);
-
-    // 포인트를 적립한다.
-    volumCredits += Math.max(perf.audience - 30, 0);
-
-    // 희극 관객 5명 마다 추가 포인트를 제공한다.
-    if ("comedy" === playFor(perf).type)
-      volumCredits += Math.floor(perf.audience / 5);
-
+    // 포인트를 적립한다
+    volumCredits += volumeCreditsFor(perf);
     // 청구내역을 출력한다.
     result += `${playFor(perf).name}: ${format(amountFor(perf) / 100)} (${
       perf.audience
     }석) \n`;
-    totalAmount += thisAmount;
+    totalAmount += amountFor(perf);
   }
 
   result += `총액: ${format(totalAmount / 100)} \n`;
@@ -73,4 +66,11 @@ function amountFor(aPerformance: Performances) {
 
 function playFor(aPerformance: Performances) {
   return plays[aPerformance.playId];
+}
+
+function volumeCreditsFor(perf: Performances) {
+  let result = 0;
+  result += Math.max(perf.audience - 30, 0);
+  if ("comedy" === playFor(perf).type) result += Math.floor(perf.audience / 5);
+  return result;
 }
