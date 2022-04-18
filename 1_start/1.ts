@@ -22,7 +22,7 @@ function statement(invoice: Invoice, plays: PlayList) {
   }).format;
 
   for (let perf of invoice.performances) {
-    let thisAmount = amountFor(playFor(perf), perf);
+    let thisAmount = amountFor(perf);
 
     // 포인트를 적립한다.
     volumCredits += Math.max(perf.audience - 30, 0);
@@ -32,14 +32,10 @@ function statement(invoice: Invoice, plays: PlayList) {
       volumCredits += Math.floor(perf.audience / 5);
 
     // 청구내역을 출력한다.
-    result += `${playFor(perf).name}: ${format(thisAmount / 100)} (${
+    result += `${playFor(perf).name}: ${format(amountFor(perf) / 100)} (${
       perf.audience
     }석) \n`;
     totalAmount += thisAmount;
-  }
-
-  function playFor(aPerformance: Performances) {
-    return plays[aPerformance.playId];
   }
 
   result += `총액: ${format(totalAmount / 100)} \n`;
@@ -49,10 +45,10 @@ function statement(invoice: Invoice, plays: PlayList) {
 }
 
 // 함수추출하기 - thisAmount, play, perf 의존 변수를 인자로 받거나 맥락상으로 안으로 위치 시킴
-function amountFor(play: Play, aPerformance: Performances) {
+function amountFor(aPerformance: Performances) {
   let result = 0;
 
-  switch (play.type) {
+  switch (playFor(aPerformance).type) {
     case "tragedy": // 비극
       result = 40000;
       if (aPerformance.audience > 30) {
@@ -69,8 +65,12 @@ function amountFor(play: Play, aPerformance: Performances) {
       break;
 
     default:
-      throw new Error(`알 수 없는 장르 :${play.type}`);
+      throw new Error(`알 수 없는 장르 :${playFor(aPerformance).type}`);
   }
 
   return result;
+}
+
+function playFor(aPerformance: Performances) {
+  return plays[aPerformance.playId];
 }
